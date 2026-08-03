@@ -38,5 +38,9 @@
 
 <h2>Practice Sample (Fall2025_CW - lab manual)</h2>
 <p><a href="practice/index.php">Read Teachers | Read Courses | Assign Teacher To Course</a></p>
+
+<h2>Extra Tools</h2>
+<p><a href="setup.php">Create Database &amp; Tables From PHP</a> (no phpMyAdmin needed)</p>
+<p><a href="php.md">PHP Quick Reference</a> (exam cheat sheet)</p>
 </body>
 </html>

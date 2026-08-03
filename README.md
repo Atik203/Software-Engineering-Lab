@@ -13,6 +13,8 @@ Update, Delete) appear on the home page automatically.
 | `crud.php` | Generic engine: handles create / read / update / delete for ANY table |
 | `index.php` | Home page: lists every table + links to its CRUD pages |
 | `database.sql` | Creates the sample databases + tables + sample data |
+| `setup.php` | Creates the database + tables **from PHP** (no phpMyAdmin) - reads `config.php` |
+| `php.md` | PHP quick-reference cheat sheet for the exam |
 | `practice/` | The exact lab-manual sample (Fall2025_CW: Read Teachers, Read Courses, Assign Teacher To Course) |
 
 ## Setup (5 minutes)
