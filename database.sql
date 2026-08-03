@@ -1,3 +1,56 @@
+CREATE DATABASE IF NOT EXISTS SchoolMgmt;
+USE SchoolMgmt;
+
+CREATE TABLE IF NOT EXISTS student (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    dept VARCHAR(50),
+    name VARCHAR(100),
+    nid VARCHAR(30),
+    birth DATE,
+    address VARCHAR(200)
+);
+
+CREATE TABLE IF NOT EXISTS teacher (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    dept VARCHAR(50),
+    name VARCHAR(100),
+    nid VARCHAR(30),
+    birth DATE,
+    address VARCHAR(200)
+);
+
+CREATE TABLE IF NOT EXISTS course (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    dept VARCHAR(50),
+    title VARCHAR(100),
+    credit INT,
+    syllabus VARCHAR(200)
+);
+
+CREATE TABLE IF NOT EXISTS payment (
+    payment_id INT PRIMARY KEY,
+    student_id INT,
+    amount DECIMAL(10,2),
+    date DATE
+);
+
+INSERT INTO student (id, dept, name, nid, birth, address) VALUES
+(1, 'CSE', 'Rahim Uddin', '1990123456789', '2002-05-14', 'Dhaka'),
+(2, 'EEE', 'Karima Sultana', '1990987654321', '2003-11-02', 'Chittagong');
+
+INSERT INTO teacher (id, dept, name, nid, birth, address) VALUES
+(1, 'CSE', 'Prof. Ahmed', '1985123456789', '1978-03-20', 'Dhaka'),
+(2, 'EEE', 'Prof. Rima', '1985987654321', '1980-09-11', 'Sylhet');
+
+INSERT INTO course (id, dept, title, credit, syllabus) VALUES
+(101, 'CSE', 'Database Management', 3, 'SQL, ER diagrams'),
+(102, 'CSE', 'Web Programming', 3, 'HTML, PHP, MySQL'),
+(103, 'EEE', 'Circuit Theory', 2, 'Ohm, KVL, KCL');
+
+INSERT INTO payment (payment_id, student_id, amount, date) VALUES
+(1, 1, 5000.00, '2026-01-15'),
+(2, 2, 4500.00, '2026-02-10');
+
 CREATE DATABASE IF NOT EXISTS Fall2025_CW;
 USE Fall2025_CW;
 
