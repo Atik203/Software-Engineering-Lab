@@ -21,8 +21,12 @@ Update, Delete) appear on the home page automatically.
 
 1. Copy this `crud` folder into `G:\XAMPP\htdocs\` (already done).
 2. Open XAMPP Control Panel and start **Apache** and **MySQL**.
-3. Open <http://localhost/phpmyadmin> and click **Import** -> choose `database.sql` -> **Go**.
-   (Or paste the SQL into the **SQL** tab - useful practice for the exam.)
+3. Create the database + tables - **two options**:
+   - phpMyAdmin: open <http://localhost/phpmyadmin> -> **Import** -> choose
+     `database.sql` -> **Go** (or paste the SQL into the **SQL** tab - useful
+     practice for the exam), **or**
+   - pure PHP: open <http://localhost/crud/setup.php> and click the button - it
+     creates everything from `config.php`.
 4. Open `config.php` and check the settings:
    - `'name' => 'SchoolMgmt'` - change to your exam database name if different
    - `'port' => 3307` - **this PC** runs XAMPP MySQL on port **3307** (another MySQL
@@ -34,7 +38,8 @@ Update, Delete) appear on the home page automatically.
 Faculty says: _"Create a database with tables X, Y"_, then asks for
 `createStudent / readStudent / updateStudent / deleteStudent` etc.
 
-1. Create the table in phpMyAdmin (Import tab, or SQL tab).
+1. Create the table - phpMyAdmin (Import / SQL tab) **or** `setup.php` (it
+   auto-creates every table from `config.php`).
 2. In `config.php` add one line to `$TABLES`:
    ```php
    'student' => ['id', 'dept', 'name', 'nid', 'birth', 'address'],
@@ -57,6 +62,8 @@ That's it. One file to touch, works for every table.
 
 ## Notes for the exam
 
+- Forgotten PHP? Read `php.md` - the full cheat sheet (syntax, mysqli, CRUD SQL,
+  JS-to-PHP comparison).
 - Tables are whitelisted in `config.php`, so there is no SQL injection risk even
   though values are escaped with `mysqli_real_escape_string`.
 - The practice sample (`practice/`) uses its own `db.php` pointing to the
