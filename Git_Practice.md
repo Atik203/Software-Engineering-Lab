@@ -20,6 +20,7 @@ git status
 ```
 
 **Output of `git status`:**
+
 ```
 On branch master
 
@@ -40,7 +41,9 @@ nothing to commit (create/copy files and use "git add" to track)
 echo "Git is a version control system." > notes.txt
 git status
 ```
+
 **Output:**
+
 ```
 On branch master
 
@@ -58,7 +61,9 @@ git add notes.txt
 git commit -m "Added notes.txt"
 git log
 ```
+
 **Output:**
+
 ```
 [master (root-commit) 4ac96b4] Added notes.txt
  1 file changed, 1 insertion(+)
@@ -83,7 +88,9 @@ git add notes.txt
 git commit -m "Updated notes.txt with branches info"
 git log --oneline
 ```
+
 **Output:**
+
 ```
 4be035c Updated notes.txt with branches info
 4ac96b4 Added notes.txt
@@ -93,7 +100,9 @@ git log --oneline
 git reset --hard 4ac96b4
 cat notes.txt
 ```
+
 **Output:**
+
 ```
 HEAD is now at 4ac96b4 Added notes.txt
 Git is a version control system.
@@ -117,7 +126,9 @@ git add update.txt
 git commit -m "Added update.txt"
 git log --oneline
 ```
+
 **Output:**
+
 ```
 Switched to branch 'feature-update'
 [feature-update 6fc5ee5] Added update.txt
@@ -140,18 +151,23 @@ Switched to branch 'feature-update'
 git checkout master
 ls
 ```
+
 **Output:**
+
 ```
 Switched to branch 'master'
 notes.txt
 ```
+
 `update.txt` is **not** present on master — confirmed.
 
 ```bash
 git merge feature-update -m "Merge feature-update into master"
 ls
 ```
+
 **Output:**
+
 ```
 Updating 4ac96b4..6fc5ee5
 Fast-forward (no commit created; -m option ignored)
@@ -168,11 +184,14 @@ update.txt
 ```bash
 git log --oneline --graph --all
 ```
+
 **Output:**
+
 ```
 * 6fc5ee5 Added update.txt
 * 4ac96b4 Added notes.txt
 ```
+
 Linear history — a signature of a fast-forward merge.
 
 ---
@@ -188,7 +207,9 @@ echo "This line was added on the design-change branch." >> notes.txt
 git add notes.txt
 git commit -m "Add design-change line to notes.txt"
 ```
+
 **Output:**
+
 ```
 Switched to branch 'design-change'
 [design-change 72aa269] Add design-change line to notes.txt
@@ -201,7 +222,9 @@ echo "This line was added on the main branch." >> notes.txt
 git add notes.txt
 git commit -m "Add main branch line to notes.txt"
 ```
+
 **Output:**
+
 ```
 Switched to branch 'master'
 [master 320a87c] Add main branch line to notes.txt
@@ -211,7 +234,9 @@ Switched to branch 'master'
 ```bash
 git merge design-change
 ```
+
 **Output — a MERGE CONFLICT occurs:**
+
 ```
 Auto-merging notes.txt
 CONFLICT (content): Merge conflict in notes.txt
@@ -221,7 +246,9 @@ Automatic merge failed; fix conflicts and then commit the result.
 ```bash
 git status
 ```
+
 **Output:**
+
 ```
 On branch master
 You have unmerged paths.
@@ -236,7 +263,9 @@ Unmerged paths:
 ```bash
 cat notes.txt
 ```
+
 **Output — Git inserts conflict markers directly into the file:**
+
 ```
 Git is a version control system.
 <<<<<<< HEAD
@@ -247,6 +276,7 @@ This line was added on the design-change branch.
 ```
 
 **Explanation:** Both branches modified the **same line region** of `notes.txt` independently since their common ancestor. Because Git can't automatically decide which version is "correct," it stops the merge and marks the conflicting section with `<<<<<<<`, `=======`, `>>>>>>>` markers. To resolve: manually edit the file to keep the desired content (or both lines), remove the conflict markers, then run:
+
 ```bash
 git add notes.txt
 git commit -m "Resolve merge conflict in notes.txt"
@@ -271,6 +301,7 @@ git commit -m "Initial commit with readme.md"
 ```
 
 **Important real-world gotcha:** Git actually **requires both a name and an email** to create a commit — even though the question says "email not needed for this question." If you skip the email, `git commit` fails with:
+
 ```
 *** Please tell me who you are.
 
@@ -281,12 +312,15 @@ Run
 
 fatal: unable to auto-detect email address (got 'root@vm.(none)')
 ```
-So in practice you must still set *some* email (or already have a global one configured) for the commit to succeed — "email not needed" only makes sense if a global email is already set on your machine from a previous `--global` configuration, so this local repo doesn't need to set it again.
+
+So in practice you must still set _some_ email (or already have a global one configured) for the commit to succeed — "email not needed" only makes sense if a global email is already set on your machine from a previous `--global` configuration, so this local repo doesn't need to set it again.
 
 ```bash
 git log --oneline
 ```
+
 **Output:**
+
 ```
 [master (root-commit) 62b99d1] Initial commit with readme.md
  1 file changed, 1 insertion(+)
@@ -307,7 +341,9 @@ echo "Information content." > info.txt
 git add app.txt
 git status
 ```
+
 **Output — notice the difference between staged and untracked:**
+
 ```
 On branch master
 Changes to be committed:
@@ -318,6 +354,7 @@ Untracked files:
   (use "git add <file>..." to include in what will be committed)
 	info.txt
 ```
+
 `app.txt` shows under **"Changes to be committed"** (staged), while `info.txt` shows under **"Untracked files"** (not staged) — this is the key difference the question asks you to observe.
 
 ```bash
@@ -326,7 +363,9 @@ git add info.txt
 git commit -m "Added info.txt"
 git log --oneline
 ```
+
 **Output:**
+
 ```
 c3e5abe Added info.txt
 07e3f5d Added app.txt
@@ -334,6 +373,7 @@ c3e5abe Added info.txt
 ```
 
 **Explanation:** There are **3 commits total**:
+
 1. `62b99d1` — Initial commit adding `readme.md`
 2. `07e3f5d` — Adds `app.txt` only
 3. `c3e5abe` — Adds `info.txt` only
@@ -352,33 +392,42 @@ git add readme.md
 git commit -m "Updated readme.md with project description"
 git log --oneline
 ```
+
 **Output:**
+
 ```
 59048c3 Updated readme.md with project description
 c3e5abe Added info.txt
 07e3f5d Added app.txt
 62b99d1 Initial commit with readme.md
 ```
+
 First commit ID: `62b99d1`
 
 ```bash
 git reset --hard 62b99d1
 ls
 ```
+
 **Output:**
+
 ```
 HEAD is now at 62b99d1 Initial commit with readme.md
 readme.md
 ```
+
 Confirmed: **`app.txt` and `info.txt` are both removed** — only `readme.md` remains, since `git reset --hard` rewrites the working directory to exactly match the target commit's state.
 
 ```bash
 cat readme.md
 ```
+
 **Output:**
+
 ```
 This is Project Alpha.
 ```
+
 Confirmed: the "Updated project description." line is gone — `readme.md` is back to its original content from the first commit.
 
 ---
@@ -394,7 +443,9 @@ echo "Documentation in progress." > info.txt
 git add info.txt
 git commit -m "Added info.txt with documentation progress"
 ```
+
 **Output:**
+
 ```
 Switched to branch 'documentation'
 [documentation 058c85c] Added info.txt with documentation progress
@@ -405,7 +456,9 @@ Switched to branch 'documentation'
 ```bash
 git log --oneline
 ```
+
 **Output (on `documentation` branch):**
+
 ```
 058c85c Added info.txt with documentation progress
 62b99d1 Initial commit with readme.md
@@ -414,10 +467,13 @@ git log --oneline
 ```bash
 git log --oneline master
 ```
+
 **Output (on `master` branch) — verify the commit does NOT appear here:**
+
 ```
 62b99d1 Initial commit with readme.md
 ```
+
 Confirmed: the `058c85c` commit exists **only** in the `documentation` branch's history, not in `master`'s.
 
 ---
@@ -434,7 +490,9 @@ echo "Initial UI layout." > ui.txt
 git add ui.txt
 git commit -m "Added ui.txt with initial layout"
 ```
+
 **Output:**
+
 ```
 Switched to branch 'master'
 Switched to branch 'feature-ui'
@@ -447,7 +505,9 @@ Switched to branch 'feature-ui'
 git checkout master
 git merge documentation -m "Merge documentation into master"
 ```
+
 **Output:**
+
 ```
 Switched to branch 'master'
 Updating 62b99d1..058c85c
@@ -456,29 +516,36 @@ Fast-forward (no commit created; -m option ignored)
  1 file changed, 1 insertion(+)
  create mode 100644 info.txt
 ```
+
 This is a **fast-forward** merge — master hadn't changed since `documentation` was created.
 
 ```bash
 git merge feature-ui -m "Merge feature-ui into master"
 ```
+
 **Output:**
+
 ```
 Merge made by the 'ort' strategy.
  ui.txt | 1 +
  1 file changed, 1 insertion(+)
  create mode 100644 ui.txt
 ```
-This is a **true three-way merge** (a real merge commit created via the `ort` strategy) — because master had *just* advanced via the previous merge, Git treats this as a genuine divergence needing a merge commit, unlike the pure fast-forward above.
+
+This is a **true three-way merge** (a real merge commit created via the `ort` strategy) — because master had _just_ advanced via the previous merge, Git treats this as a genuine divergence needing a merge commit, unlike the pure fast-forward above.
 
 ```bash
 ls
 ```
+
 **Output:**
+
 ```
 info.txt
 readme.md
 ui.txt
 ```
+
 Confirmed: both `info.txt` and `ui.txt` now exist in master.
 
 ---
@@ -492,7 +559,9 @@ echo "Main branch update." >> readme.md
 git add readme.md
 git commit -m "Add main branch update to readme.md"
 ```
+
 **Output:**
+
 ```
 [master a8b523f] Add main branch update to readme.md
  1 file changed, 1 insertion(+)
@@ -504,7 +573,9 @@ echo "UI branch update." >> readme.md
 git add readme.md
 git commit -m "Add UI branch update to readme.md"
 ```
+
 **Output:**
+
 ```
 Switched to branch 'feature-ui'
 [feature-ui 29fb7e1] Add UI branch update to readme.md
@@ -515,7 +586,9 @@ Switched to branch 'feature-ui'
 git checkout master
 git merge feature-ui
 ```
+
 **Output — CONFLICT again:**
+
 ```
 Switched to branch 'master'
 Auto-merging readme.md
@@ -526,7 +599,9 @@ Automatic merge failed; fix conflicts and then commit the result.
 ```bash
 git status
 ```
+
 **Output:**
+
 ```
 On branch master
 You have unmerged paths.
@@ -541,15 +616,3 @@ Unmerged paths:
 **Explanation:** Even though `feature-ui` was already merged into master once (for `ui.txt`), Git doesn't refuse to merge it again — the branches have **since diverged further**: master got a new commit ("Main branch update") and `feature-ui` got a different new commit ("UI branch update"), both touching the **same file and same region** (`readme.md`). Since Git can't automatically reconcile two different edits to the same line, it stops and reports a **merge conflict**, requiring manual resolution — exactly the same mechanism as in Question 1, Problem 6. This shows that "already merged once" does **not** mean two branches can never conflict again — each new set of divergent commits is evaluated independently at merge time.
 
 ---
-
-## Key Concepts Reinforced Across Both Questions
-
-| Concept | Where it appears |
-|---|---|
-| **Fast-forward merge** (no new commit, linear history) | Q1 Problem 5, Q2 Problem 5 (first merge) |
-| **Three-way merge** (real merge commit created) | Q2 Problem 5 (second merge) |
-| **Merge conflict** (same lines edited on both branches) | Q1 Problem 6, Q2 Problem 6 |
-| **`git reset --hard`** (discard commits + rewrite working directory) | Q1 Problem 3, Q2 Problem 3 |
-| **Staged vs Untracked** (`git status` distinction) | Q2 Problem 2 |
-| **Branch isolation** (commits on one branch don't appear on another until merged) | Q1 Problem 4/5, Q2 Problem 4 |
-| **Git requires name + email to commit** | Q2 Problem 1 (real-world gotcha) |
