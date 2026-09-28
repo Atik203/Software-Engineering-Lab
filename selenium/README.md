@@ -10,11 +10,15 @@ A complete, practical guide and cheat sheet for **Software Engineering Lab Class
 3. [The 8 Locator Strategies](#3-the-8-locator-strategies)
 4. [CRITICAL EXAM TRAPS & GOTCHAS](#4-critical-exam-traps--gotchas)
 5. [Automating Common Form Elements](#5-automating-common-form-elements)
-6. [Form Submission & Validation](#6-form-submission--validation)
-7. [Dropdowns (Select Class)](#7-dropdowns-select-class)
+6. [Dropdowns & Select Controls (Static & Dynamic)](#6-dropdowns--select-controls)
+7. [Form Submission & Validation](#7-form-submission--validation)
 8. [Handling JavaScript Alerts & Popups](#8-handling-javascript-alerts--popups)
-9. [Waits (Implicit vs Explicit)](#9-waits-implicit-vs-explicit)
-10. [Full End-to-End Exam Template](#10-full-end-to-end-exam-template)
+9. [Handling Multiple Windows & Tabs](#9-handling-multiple-windows--tabs)
+10. [Handling Frames & iFrames](#10-handling-frames--iframes)
+11. [Mouse Actions & Hover (ActionChains)](#11-mouse-actions--hover-actionchains)
+12. [Waits (Implicit vs Explicit)](#12-waits-implicit-vs-explicit)
+13. [Exam Problem 1: RahulShetty Client Portal (Login, Forgot Password, Navigation)](#13-exam-problem-1-rahulshetty-client-portal)
+14. [Exam Problem 2: ProtoCommerce Angular Form (Full UI Controls Automation)](#14-exam-problem-2-protocommerce-angular-form)
 
 ---
 
@@ -67,7 +71,7 @@ driver.maximize_window()
 driver.minimize_window()
 
 # Navigation
-driver.get("https://rahulshettyacademy.com/angularpractice/")
+driver.get("https://rahulshettyacademy.com/client")
 print("Page Title:", driver.title)
 print("Current URL:", driver.current_url)
 
@@ -97,9 +101,9 @@ from selenium.webdriver.common.by import By
 | **Class Name** | `driver.find_element(By.CLASS_NAME, "form-control")` | `<input class="form-control">` |
 | **CSS Selector** | `driver.find_element(By.CSS_SELECTOR, "input[type='submit']")` | `<input type="submit">` |
 | **XPath** | `driver.find_element(By.XPATH, "//input[@value='Submit']")` | `<input value="Submit">` |
-| **Tag Name** | `driver.find_element(By.TAG_NAME, "form")` | `<form>...</form>` |
-| **Link Text** | `driver.find_element(By.LINK_TEXT, "Shop")` | `<a href="/shop">Shop</a>` |
-| **Partial Link**| `driver.find_element(By.PARTIAL_LINK_TEXT, "Sh")` | `<a href="/shop">Shop</a>` |
+| **Tag Name** | `driver.find_element(By.TAG_NAME, "h3")` | `<h3>Enter New Password</h3>` |
+| **Link Text** | `driver.find_element(By.LINK_TEXT, "Forgot password?")` | `<a href="...">Forgot password?</a>` |
+| **Partial Link**| `driver.find_element(By.PARTIAL_LINK_TEXT, "Forgot")` | `<a href="...">Forgot password?</a>` |
 
 ---
 
@@ -163,7 +167,69 @@ bday_input.send_keys("21052026")       # Sends DDMMYYYY
 
 ---
 
-## 6. Form Submission & Validation
+## 6. Dropdowns & Select Controls
+
+### A. Static Dropdowns (`<select>` and `<option>` tags)
+
+Use the built-in `Select` class:
+
+```python
+from selenium.webdriver.support.select import Select
+
+# 1. Locate the <select> tag
+dropdown_element = driver.find_element(By.ID, "exampleFormControlSelect1")
+dropdown = Select(dropdown_element)
+
+# 2. Three ways to select an option:
+dropdown.select_by_visible_text("Female")   # By visible text on UI
+dropdown.select_by_index(1)                # By 0-based index (0 is 1st, 1 is 2nd)
+dropdown.select_by_value("option_value")   # By 'value' HTML attribute
+
+# 3. Read the currently selected option:
+current_text = dropdown.first_selected_option.text
+print("Selected:", current_text)
+assert current_text == "Female"
+
+# 4. Iterate over all options in the dropdown:
+for opt in dropdown.options:
+    print("Option:", opt.text)
+
+# 5. Multi-Select Dropdowns (if multiple='true'):
+if dropdown.is_multiple:
+    dropdown.select_by_visible_text("Option 1")
+    dropdown.select_by_visible_text("Option 2")
+    dropdown.deselect_all()  # Deselect all selections
+```
+
+---
+
+### B. Dynamic / Auto-Suggestive Dropdowns
+
+For search boxes that show dynamic suggestions as you type (e.g. typing `"ind"` to pick `"India"`):
+
+```python
+# 1. Type the keyword
+driver.find_element(By.ID, "autosuggest").send_keys("ind")
+time.sleep(2)  # Give time for AJAX suggestions to load
+
+# 2. Grab all suggestion elements using find_elements (plural)
+suggestions = driver.find_elements(By.CSS_SELECTOR, "li.ui-menu-item a")
+print("Total suggestions found:", len(suggestions))
+
+# 3. Loop through suggestions and click the target match
+for option in suggestions:
+    if option.text == "India":
+        option.click()
+        break
+
+# 4. Verify selection (for dynamic inputs, use get_attribute('value'))
+selected_val = driver.find_element(By.ID, "autosuggest").get_attribute("value")
+assert selected_val == "India"
+```
+
+---
+
+## 7. Form Submission & Validation
 
 ```python
 # Submit using click on the button:
@@ -182,56 +248,113 @@ assert "Success!" in success_banner.text
 
 ---
 
-## 7. Dropdowns (`Select` Class)
-
-When a dropdown uses standard HTML `<select>` and `<option>` tags, use Selenium's `Select` class:
-
-```python
-from selenium.webdriver.support.select import Select
-
-# 1. Locate the <select> tag
-dropdown_element = driver.find_element(By.ID, "exampleFormControlSelect1")
-dropdown = Select(dropdown_element)
-
-# 2. Three ways to select an option:
-dropdown.select_by_visible_text("Female")   # By visible text displayed in UI
-dropdown.select_by_index(1)                # By 0-based index (e.g., 0, 1, 2)
-# dropdown.select_by_value("option_value") # By the 'value' HTML attribute
-
-# Verify selection:
-selected_option = dropdown.first_selected_option.text
-print("Selected:", selected_option)
-assert selected_option == "Female"
-```
-
----
-
 ## 8. Handling JavaScript Alerts & Popups
 
-For standard browser dialogs (`window.alert()`, `window.confirm()`, `window.prompt()`):
+For standard browser popups created with `window.alert()`, `window.confirm()`, or `window.prompt()`:
 
 ```python
-# Trigger the alert in the web app first, then switch to it:
+# 1. Trigger the alert in the web app, then switch to it:
 alert = driver.switch_to.alert
 
-print("Alert text:", alert.text)
+# 2. Read alert text
+print("Alert message:", alert.text)
 
-# Click 'OK' on alert / confirm
+# 3. Accept (Clicks 'OK')
 alert.accept()
 
-# Click 'Cancel' on confirm dialog
+# 4. Dismiss (Clicks 'Cancel' if it's a confirmation popup)
 # alert.dismiss()
 
-# Type into a prompt dialog:
-# alert.send_keys("My Name")
+# 5. Type into a prompt popup:
+# alert.send_keys("My input")
 # alert.accept()
 ```
 
 ---
 
-## 9. Waits (Implicit vs Explicit)
+## 9. Handling Multiple Windows & Tabs
 
-Avoid using `time.sleep()` in production code. Use Selenium waits instead:
+When a link opens in a new tab or popup window:
+
+```python
+# 1. Get current (parent) window handle
+parent_window = driver.current_window_handle
+
+# 2. Click the link that opens a new tab/window
+driver.find_element(By.LINK_TEXT, "Open New Window").click()
+time.sleep(2)
+
+# 3. Get all open window handles
+all_windows = driver.window_handles  # List of window IDs
+
+# 4. Switch to the child window (index 1)
+for window in all_windows:
+    if window != parent_window:
+        driver.switch_to.window(window)
+        break
+
+# Now performing actions in the new tab:
+print("New Window Title:", driver.title)
+driver.close()  # Closes ONLY the child tab
+
+# 5. Switch back to parent window
+driver.switch_to.window(parent_window)
+print("Back to Parent Window Title:", driver.title)
+```
+
+---
+
+## 10. Handling Frames & iFrames
+
+When elements are nested inside an `<iframe>`:
+
+```python
+# 1. Switch to frame using ID, Name, or WebElement
+driver.switch_to.frame("courses-iframe")
+# or: driver.switch_to.frame(driver.find_element(By.ID, "courses-iframe"))
+# or by index: driver.switch_to.frame(0)
+
+# 2. Interact with elements inside the frame
+driver.find_element(By.LINK_TEXT, "All Access Plan").click()
+
+# 3. CRITICAL: Switch back to main web page outside the frame
+driver.switch_to.default_content()
+```
+
+---
+
+## 11. Mouse Actions & Hover (ActionChains)
+
+For hover menus, right-clicks, and double-clicks:
+
+```python
+from selenium.webdriver import ActionChains
+
+actions = ActionChains(driver)
+
+# 1. Mouse Hover over element
+menu = driver.find_element(By.ID, "mousehover")
+actions.move_to_element(menu).perform()
+
+# 2. Click a sub-item that appears after hover
+top_link = driver.find_element(By.LINK_TEXT, "Top")
+actions.move_to_element(top_link).click().perform()
+
+# 3. Right-Click (Context Click)
+# actions.context_click(menu).perform()
+
+# 4. Double Click
+# actions.double_click(menu).perform()
+
+# 5. Drag and Drop
+# source = driver.find_element(By.ID, "draggable")
+# target = driver.find_element(By.ID, "droppable")
+# actions.drag_and_drop(source, target).perform()
+```
+
+---
+
+## 12. Waits (Implicit vs Explicit)
 
 ### Implicit Wait (Global timeout for all elements)
 ```python
@@ -244,71 +367,130 @@ driver.implicitly_wait(10)
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Wait up to 10 seconds until the success banner is visible in the DOM
+# Wait up to 10 seconds until the element is visible
 wait = WebDriverWait(driver, 10)
-success_alert = wait.until(
+alert_box = wait.until(
     EC.visibility_of_element_located((By.CLASS_NAME, "alert-success"))
 )
-print("Alert appeared:", success_alert.text)
+print("Alert appeared:", alert_box.text)
 ```
 
 ---
 
-## 10. Full End-to-End Exam Template
+## 13. Exam Problem 1: RahulShetty Client Portal
 
-Here is a complete, working script automating the **ProtoCommerce Angular Practice Form** with all assertions:
+**Faculty Question Tasks:**
+1. Go to `https://rahulshettyacademy.com/client`
+2. Create account manually beforehand.
+3. Click "Forgot password?".
+4. Enter registered email address.
+5. Read & print heading/title text.
+6. Return to Login page.
+7. Login using email and password.
+8. Click blinking green link (`blinkingText`).
 
 ```python
-import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
+import time
 
-# 1. Setup options
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
 
-# 2. Launch browser
 driver = webdriver.Chrome(options=options)
 driver.maximize_window()
-driver.implicitly_wait(5)
 
-try:
-    # 3. Navigate
-    driver.get("https://rahulshettyacademy.com/angularpractice/")
-    assert "ProtoCommerce" in driver.title
+EMAIL = "0112310298@gmail.com"  # Your registered student email
+PASSWORD = "Ab#12345"
 
-    # 4. Fill text fields
-    driver.find_element(By.NAME, "name").send_keys("Atikur Rahaman")
-    driver.find_element(By.NAME, "email").send_keys("atikur@example.com")
-    driver.find_element(By.ID, "exampleInputPassword1").send_keys("SecretPass123")
+# Task 1: Go to website
+driver.get("https://rahulshettyacademy.com/client")
+print("Task 1 - Page Title:", driver.title)
+time.sleep(2)
 
-    # 5. Checkbox
-    checkbox = driver.find_element(By.ID, "exampleCheck1")
-    if not checkbox.is_selected():
-        checkbox.click()
+# Task 3: Click Forgot password
+driver.find_element(By.CLASS_NAME, "forgot-password-link").click()
+time.sleep(2)
 
-    # 6. Dropdown (Gender)
-    gender_dropdown = Select(driver.find_element(By.ID, "exampleFormControlSelect1"))
-    gender_dropdown.select_by_visible_text("Male")
+# Task 4: Enter registered email
+driver.find_element(By.CSS_SELECTOR, "input[type='email']").send_keys(EMAIL)
+time.sleep(1)
 
-    # 7. Radio button (Employment Status: Student)
-    driver.find_element(By.ID, "inlineRadio1").click()
+# Task 5: Read and print heading & title
+heading = driver.find_element(By.CLASS_NAME, "card-title").text
+print("Task 5 - Page Title:", driver.title)
+print("Task 5 - Heading Text:", heading)
+time.sleep(1)
 
-    # 8. Date of birth
-    driver.find_element(By.NAME, "bday").send_keys("15082002")
+# Task 6: Return to Login page
+driver.back()
+time.sleep(2)
+print("Task 6 - Returned to Login Page. Title:", driver.title)
 
-    # 9. Submit the form
-    driver.find_element(By.CSS_SELECTOR, "input[type='submit']").click()
+# Task 7: Login
+driver.find_element(By.ID, "userEmail").send_keys(EMAIL)
+time.sleep(1)
+driver.find_element(By.ID, "userPassword").send_keys(PASSWORD)
+time.sleep(1)
+driver.find_element(By.ID, "login").click()
+time.sleep(5)  # Wait for dashboard to load
 
-    # 10. Verify submission alert
-    alert_box = driver.find_element(By.CLASS_NAME, "alert-success")
-    print("Submission Result:\n", alert_box.text)
-    assert "Success!" in alert_box.text
+# Task 8: Click blinking green link
+driver.find_element(By.CLASS_NAME, "blinkingText").click()
+time.sleep(2)
+print("Task 8 - Navigated to:", driver.current_url)
+print("All tasks completed successfully!")
+```
 
-    print("\n✅ Test Passed Successfully!")
+---
 
-finally:
-    # driver.quit()
-    pass
+## 14. Exam Problem 2: ProtoCommerce Angular Form
+
+**Covers: Text inputs, Select dropdown, Checkbox, Radio, Date picker, Submit, and Alert verification.**
+
+```python
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.select import Select
+import time
+
+options = webdriver.ChromeOptions()
+options.add_experimental_option("detach", True)
+
+driver = webdriver.Chrome(options=options)
+driver.maximize_window()
+
+# 1. Navigate
+driver.get("https://rahulshettyacademy.com/angularpractice/")
+time.sleep(2)
+
+# 2. Text fields
+driver.find_element(By.NAME, "name").send_keys("Atikur Rahaman")
+driver.find_element(By.NAME, "email").send_keys("0112310298@gmail.com")
+driver.find_element(By.ID, "exampleInputPassword1").send_keys("SecretPass123")
+
+# 3. Checkbox
+checkbox = driver.find_element(By.ID, "exampleCheck1")
+if not checkbox.is_selected():
+    checkbox.click()
+
+# 4. Static Dropdown (<select>)
+dropdown = Select(driver.find_element(By.ID, "exampleFormControlSelect1"))
+dropdown.select_by_visible_text("Female")
+
+# 5. Radio button
+driver.find_element(By.ID, "inlineRadio1").click()
+
+# 6. Date input
+driver.find_element(By.NAME, "bday").send_keys("21052002")
+
+# 7. Submit form
+driver.find_element(By.CSS_SELECTOR, "input[type='submit']").click()
+time.sleep(2)
+
+# 8. Verify alert message
+alert_box = driver.find_element(By.CLASS_NAME, "alert-success")
+print("Submission Result:\n", alert_box.text)
+assert "Success!" in alert_box.text
+print("Test Passed!")
 ```
