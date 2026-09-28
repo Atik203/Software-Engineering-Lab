@@ -1,14 +1,21 @@
+from selenium.webdriver import ChromeOptions
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
-# In Selenium 4, the executable path must be passed inside a Service object
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+# Service Class
+service = Service()
 
-# Note: In modern Selenium 4.6+, you can also simply write:
-# driver = webdriver.Chrome()
+# Chrome Options
+options = ChromeOptions()
+
+# add_experimental_option("detach", True) makes browser stay open after script execution
+options.add_experimental_option("detach", True)
+
+driver = webdriver.Chrome(service=service, options=options)
+
+driver.maximize_window()
 
 driver.get("https://google.com")
 print("Page Title:", driver.title)
 
-driver.quit()
