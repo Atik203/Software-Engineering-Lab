@@ -1,7 +1,6 @@
 from selenium.webdriver import ChromeOptions
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 
 # Service Class
 service = Service()
@@ -17,5 +16,19 @@ driver = webdriver.Chrome(service=service, options=options)
 driver.maximize_window()
 
 driver.get("https://google.com")
-print("Page Title:", driver.title)
+print("Page URL", driver.current_url)
+
+driver.get('https://youtube.com')
+print("Current URL", driver.current_url)
+
+driver.back()
+print("Current URL", driver.current_url)
+
+driver.forward()
+print("Current URL", driver.current_url)
+
+
+driver.refresh()
+print("Current URL", driver.current_url)
+
 
