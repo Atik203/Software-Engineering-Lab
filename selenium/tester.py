@@ -32,4 +32,4 @@ driver.refresh()
 print("Current URL", driver.current_url)
 
 
-driver.close()
+driver.close() 

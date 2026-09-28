@@ -89,8 +89,9 @@ The [`php/`](file:///d:/SE%20LAB/Software-Engineering-Lab/php) directory provide
 
 ### 2. Automated Testing (Selenium)
 
-The [`selenium/`](file:///d:/SE%20LAB/Software-Engineering-Lab/selenium) directory is designated for automated testing practices, test cases, and WebDriver test scripts:
+The [`selenium/`](file:///d:/SE%20LAB/Software-Engineering-Lab/selenium) directory contains test automation suites and a dedicated **[Class Test (CT) Quick Reference Cheat Sheet](file:///d:/SE%20LAB/Software-Engineering-Lab/selenium/README.md)**:
 
+- **Quick Reference Guide ([`selenium/README.md`](file:///d:/SE%20LAB/Software-Engineering-Lab/selenium/README.md))**: Covers driver setup (Chrome/Edge), all 8 locator strategies, common exam traps (compound class names, attribute locators, Angular two-way binding vs form submission), dropdowns (`Select`), alerts/popups, and explicit waits.
 - **Functional & UI Automation**: Writing scripts to automate browser interactions against web applications (such as student registration, login forms, and course management).
 - **Element Locator Strategies**: Practice selecting DOM elements using `ID`, `Name`, `XPath`, `CSS Selector`, `Class Name`, and `Link Text`.
 - **Form Automation & Validation**: Automating input typing, dropdown selection, radio button toggling, and button submission.
