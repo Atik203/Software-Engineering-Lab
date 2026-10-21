@@ -1,5 +1,8 @@
 # SELENIUM
 
+import utils.http_session
+import utils.transport
+import utils.session
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 # from selenium.webdriver.chrome.service import Service //Import for Chrome
